@@ -1,3 +1,59 @@
+## Office Table 转 HTML Table
+
+Office Table 转 HTML Table。
+
+在线体验：[https://table.yige.ink](https://table.yige.ink)
+
+![预览图](preview.png)
+
+参考过一些开源项目的思路，时间太久，忘了。
+
+在线测试
+
+## html-minifier-service
+
+```json
+{
+  "name": "html-minifier-service",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "html-minifier": "^4.0.0"
+  }
+}
+```
+
+```javascript
+const app = require('express')()
+const minify = require('html-minifier').minify
+const port = 3567
+const bodyParser = require('body-parser')
+
+app.use(bodyParser.json({ limit: '50mb', extended: true }))
+
+// respond with "hello world" when a GET request is made to the homepage
+app.post('/', function(req, res) {
+  const result = minify(req.body.code, {
+    html5: true,
+    collapseInlineTagWhitespace: true,
+    collapseWhitespace: true,
+    removeAttributeQuotes: false,
+    minifyCSS: true,
+    minifyJS: true
+  })
+
+  res.json({
+    status: 1,
+    result
+  })
+})
+
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+```
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
