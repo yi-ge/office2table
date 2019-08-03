@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
 import './App.css';
-import Axios from 'axios';
-const removeUnused = require('postcss-remove-unused');
-const postcss = require('postcss');
-const prettier = require("prettier/standalone");
-const plugins = [require("prettier/parser-html"), require("prettier/parser-postcss")];
+import axios from 'axios';
+import {
+  SketchPicker
+} from 'react-color'
+
+const removeUnused = require('postcss-remove-unused')
+const postcss = require('postcss')
+const prettier = require("prettier/standalone")
+const plugins = [require("prettier/parser-html"), require("prettier/parser-postcss")]
 const CSS = require('css')
-const cssjs = require("jotform-css.js");
+const cssjs = require("jotform-css.js")
 //initialize parser object
-const parser = new cssjs.cssjs();
+const parser = new cssjs.cssjs()
+const request = axios.create()
 
 // 移除指定标签
 function removeTags(tagName, el = document){
@@ -230,7 +235,10 @@ class App extends Component {
         compress: false,
         removeAllCSS: false,
         removeTableWidth: false,
-        percent: false
+        percent: false,
+        border: false,
+        borderColor: false,
+        borderColorValue: '#000'
       };
   }
 
@@ -347,6 +355,23 @@ class App extends Component {
           removeStyleatt(p)
         }
 
+        // 添加边框
+        if (this.state.border) {
+          const tableObjects = p.getElementsByTagName('table')
+          for (let ob = tableObjects.length - 1; ob >= 0; ob--) {
+            tableObjects[ob].setAttribute("border", "1")
+            tableObjects[ob].style.borderCollapse = "collapse"
+          }
+        }
+
+        // 添加边框颜色
+        if (this.state.borderColor) {
+          const tableObjects = p.getElementsByTagName('table')
+          for (let ob = tableObjects.length - 1; ob >= 0; ob--) {
+            tableObjects[ob].setAttribute("bordercolor", this.state.borderColorValue)
+          }
+        }
+
         finalCode = p.body.innerHTML
         finalCode = prettier.format(finalCode, { parser: "html", plugins });
 
@@ -354,7 +379,7 @@ class App extends Component {
         if (this.state.compress) {
           const {
             data
-          } = await Axios.post('https://minifier.yige.ink', {
+          } = await request.post('https://minifier.yige.ink', {
             code: finalCode
           })
 
@@ -362,6 +387,8 @@ class App extends Component {
             finalCode = data.result
           }
         }
+
+        p.body.innerHTML = finalCode;
 
         this.setState(() => ({html: finalCode}));
         this.textInput.style.backgroundColor="#7a9a95";
@@ -388,6 +415,12 @@ class App extends Component {
     const state = {}
     state[e.target.value] = !this.state[e.target.value]
     this.setState(state)
+  }
+
+  handleBorderColorChangeComplete = (color) => {
+    this.setState({
+      borderColorValue: color.hex
+    });
   }
 
   render() {
@@ -430,7 +463,19 @@ class App extends Component {
             <label ><input type="checkbox" name='type' value="removeTableWidth" checked={this.state.removeTableWidth === true}
                   onChange={this.boxChange}/>移除表格宽度</label><br/>
             <label ><input type="checkbox" name='type' value="percent" checked={this.state.percent === true}
-                  onChange={this.boxChange}/>将表格宽度转换为百分比</label>
+                  onChange={this.boxChange}/>将表格宽度转换为百分比</label><br/>
+            <label ><input type="checkbox" name='type' value="border" checked={this.state.border === true}
+                  onChange={this.boxChange}/>添加表格默认边框</label><br/>
+            <label ><input type="checkbox" name='type' value="borderColor" checked={this.state.borderColor === true}
+                  onChange={this.boxChange}/>添加表格默认边框颜色</label><br/>
+            <div id="colorPicker"><SketchPicker
+              color = {
+                this.state.borderColorValue
+              }
+              onChangeComplete = {
+                this.handleBorderColorChangeComplete
+              }
+            /></div>
           </div>
         </div>
         <input type="text" id="input" value={this.state.value} onFocus={this.inputFocus} onBlur={this.inputBlur} onPaste={this.inputPaste} ref={(input) => { this.textInput = input; }} readOnly/>

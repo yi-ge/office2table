@@ -65,6 +65,7 @@ body {
 
 .PowerType {
   max-width: 320px;
+  min-height: 300px;
   width: 100%;
   margin: auto;
   text-align: left;
@@ -101,7 +102,12 @@ body {
   width: 150px;
   margin-top: -25px;
   margin-left: -75px;
+}
 
+#colorPicker {
+  position: absolute;
+  right: 100px;
+  top: 20px;
 }
 
 .object {

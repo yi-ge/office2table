@@ -4,7 +4,7 @@ import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 
-ReactDOM.render( < App / > , document.getElementById('root'))
+ReactDOM.render(<App />, document.getElementById('root'))
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
@@ -22,5 +22,5 @@ String.prototype.replaceAll = function (s1, s2) {
   //     data = str1 + '<img src="' + src + j + '.gif">' + str2;
   //   }
   // }
-  return this.replace(new RegExp(s1, "gm"), s2);
+  return this.replace(new RegExp(s1, 'gm'), s2)
 }
