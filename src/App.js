@@ -23,6 +23,15 @@ function removeTags(tagName, el = document){
   }
 }
 
+// 移除指定标签但保留标签内容
+function removeTagsHoldContent(tagName, el = document) {
+  var tagElements = el.getElementsByTagName(tagName)
+  for (var m = tagElements.length - 1; m >= 0; m--) {
+    tagElements[m].parentNode.innerHTML = tagElements[m].parentNode.innerHTML.replace(tagElements[m].outerHTML,
+      tagElements[m].innerText.trim())
+  }
+}
+
 // 移除所有CSS
 function removeAllCSS (el = document) {
   el.querySelectorAll('link').forEach(linkEl => linkEl.rel === 'stylesheet' && linkEl.remove());
@@ -35,6 +44,7 @@ function removeAllCSS (el = document) {
       node.removeAttribute('cellpadding')
       node.removeAttribute('cellspacing')
       node.removeAttribute('class')
+      node.removeAttribute('lang')
     }
     return node.removeAttribute && node.removeAttribute('style');
   })(el.body);
@@ -342,9 +352,13 @@ class App extends Component {
 
         // 移除多余标签
         removeTags('col', p)
+        removeTags('o:p', p)
         removeTags('colgroup', p)
 
-        if (this.state.removeAllCSS) removeAllCSS(p)
+        if (this.state.removeAllCSS) {
+          removeAllCSS(p)
+          removeTagsHoldContent('font', p)
+        }
         if (this.state.removeTableWidth) removeTableWidth(p)
 
         // 转百分数

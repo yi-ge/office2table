@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    html,
+    body,
+    #preview {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <iframe id="preview"></iframe>
+
+  <script>
+    // 移除指定标签但保留标签内容
+    function removeTagsHoldContent(tagName, el = document) {
+      var tagElements = el.getElementsByTagName(tagName)
+      for (var m = tagElements.length - 1; m >= 0; m--) {
+        tagElements[m].parentNode.innerHTML = tagElements[m].parentNode.innerHTML.replace(tagElements[m].outerHTML,
+          tagElements[m].innerText.trim())
+      }
+    }
+
+    var content = `<div>
+      <table border="1" bordercolor="#000" style="border-collapse: collapse;">
+        <tbody>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>赔偿项目</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.5%;">
+              <p>
+                <span>赔偿标准</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.6%;">
+              <p>
+                <span>赔偿机构</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>医疗费</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>按工伤保险诊疗项目目录、工伤保险药品目录、工伤保险住院服务标准支付。</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十条】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>伙食补助费</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>由统筹地区人民政府规定。</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十条。具体多少元一天咨询当地人社局】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>交通、食宿费</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>到统筹地区以外就医产生，由统筹地区人民政府规定。</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十条。（两地往返交通费凭据报销<font face="Calibri">)</font>
+                  <font face="宋体">】</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>康复治疗费</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>须到签订服务协议的医疗机构治疗，按工伤保险诊疗项目目录、工伤保险药品目录、工伤保险住院服务标准支付。</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>工伤医疗期工资</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>工资福利待遇不变，不超过<font face="Calibri">24</font>
+                  <font face="宋体">个月。</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十三条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>用人单位</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>生活护理费</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>生活护理费分为评残前和评残后，评残前（住院）经医院开具证明由用人单位负责护理，如未护理按照当地护工的工资支付；评残后按照生活完全不能自理、生活大部分不能自理或者生活部分不能自理<font
+                    face="Calibri">3</font>
+                  <font face="宋体">个不同等级支付，其标准分别为统筹地区上年度职工月平均工资的</font>
+                  <font face="Calibri">50%</font>
+                  <font face="宋体">、</font>
+                  <font face="Calibri">40%</font>
+                  <font face="宋体">或者</font>
+                  <font face="Calibri">30%</font>
+                  <font face="宋体">，按月支付。</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十四条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>辅助器具费</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>经劳动能力鉴定委员会确认，按照国家规定的标准从工伤保险基金支付。</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十二条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>一次性</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>伤残补助金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>一级伤残为<font face="Calibri">27</font>
+                  <font face="宋体">个月的本人工资；</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>二级伤残为<font face="Calibri">25</font>
+                  <font face="宋体">个月的本人工资；</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>三级伤残为<font face="Calibri">23</font>
+                  <font face="宋体">个月的本人工资；</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>四级伤残为<font face="Calibri">21</font>
+                  <font face="宋体">个月的本人工资；</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>五级伤残为<font face="Calibri">18</font>
+                  <font face="宋体">个月的本人工资；</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>六级伤残为<font face="Calibri">16</font>
+                  <font face="宋体">个月的本人工资；</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>七级伤残为<font face="Calibri">13</font>
+                  <font face="宋体">个月的本人工资；</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>八级伤残为<font face="Calibri">11</font>
+                  <font face="宋体">个月的本人工资；</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>九级伤残为<font face="Calibri">9</font>
+                  <font face="宋体">个月的本人工资；</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>十级伤残为<font face="Calibri">7</font>
+                  <font face="宋体">个月的本人工资。</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十五、三十六、三十七条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" rowspan="2" style="width:4.9%;">
+              <p>
+                <span>伤残津贴</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>一级伤残为本人工资的<font face="Calibri">90%</font>
+                  <font face="宋体">，</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>二级伤残为本人工资的<font face="Calibri">85%</font>
+                  <font face="宋体">，</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>三级伤残为本人工资的<font face="Calibri">80%</font>
+                  <font face="宋体">，</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>四级伤残为本人工资的<font face="Calibri">75%</font>
+                  <font face="宋体">。</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>伤残津贴实际金额低于当地最低工资标准的，补足差额。</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十五条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>五级、六级伤残，保留劳动关系，由用人单位安排适当工作。</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>难以安排工作的，按月发给伤残津贴。五级伤残为本人工资的<font face="Calibri">70%</font>
+                  <font face="宋体">，六级伤残为本人工资的</font>
+                  <font face="Calibri">60%</font>
+                  <font face="宋体">。</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>伤残津贴实际金额低于当地最低工资标准的，补足差额。</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十六条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>用人单位</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>一次性</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>伤残医疗补助金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>由省、自治区、直辖市人民政府规定。</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>上海市标准</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>五级<font face="Calibri">18</font>
+                  <font face="宋体">个月，六级</font>
+                  <font face="Calibri">15</font>
+                  <font face="宋体">个月，七级</font>
+                  <font face="Calibri">12</font>
+                  <font face="宋体">个月，八级</font>
+                  <font face="Calibri">9</font>
+                  <font face="宋体">个月，九级</font>
+                  <font face="Calibri">6</font>
+                  <font face="宋体">个月，十级</font>
+                  <font face="Calibri">3</font>
+                  <font face="宋体">个月。</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>基数为上海市平均工资。</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《上海市工伤保险条例》第四十、四十一条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>一次性</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>伤残就业补助金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>由省、自治区、直辖市人民政府规定。</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>上海市标准</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>
+                  <o:p>&nbsp;</o:p>
+                </span>
+              </p>
+              <p>
+                <span>五级<font face="Calibri">18</font>
+                  <font face="宋体">个月，六级</font>
+                  <font face="Calibri">15</font>
+                  <font face="宋体">个月，七级</font>
+                  <font face="Calibri">12</font>
+                  <font face="宋体">个月，八级</font>
+                  <font face="Calibri">9</font>
+                  <font face="宋体">个月，九级</font>
+                  <font face="Calibri">6</font>
+                  <font face="宋体">个月，十级</font>
+                  <font face="Calibri">3</font>
+                  <font face="宋体">个月。</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>基数为上海市平均工资。</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《上海市工伤保险条例》第四十、四十一条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>用人单位</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>丧葬补助金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>6<font face="宋体">个月的统筹地区上年度职工月平均工资。</font></span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十九条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>供养亲属抚恤金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>配偶每月<font face="Calibri">40%</font>
+                  <font face="宋体">，其他亲属每人每月</font>
+                  <font face="Calibri">30%</font>
+                  <font face="宋体">，孤寡老人或者孤儿每人每月在上述标准的基础上增加</font>
+                  <font face="Calibri">10%</font>
+                  <font face="宋体">。核定的各供养亲属的抚恤金之和不应高于因工死亡职工生前的工资。</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十九条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>一次性</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>工亡补助金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>上一年度全国城镇居民人均可支配收入的<font face="Calibri">20</font>
+                  <font face="宋体">倍。</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>2017<font face="宋体">年国家统计局最新公布数据：</font>
+                  <font face="Calibri">2017</font>
+                  <font face="宋体">年度全国城镇居民人均可支配收入为</font>
+                  <font face="Calibri">36396</font>
+                  <font face="宋体">元。</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>因此<font face="Calibri">2017</font>
+                  <font face="宋体">年最新一次性工亡补助金标准为 </font>
+                  <font face="Calibri">36396</font>
+                  <font face="宋体">元</font>
+                  <font face="Calibri">×20=727920</font>
+                  <font face="宋体">元（全国一口价）</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第三十九条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td valign="center" style="width:4.9%;">
+              <p>
+                <span>下落不明</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>供养亲属抚恤金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:90.1%;">
+              <p>
+                <span>配偶每月<font face="Calibri">40%</font>
+                  <font face="宋体">，其他亲属每人每月</font>
+                  <font face="Calibri">30%</font>
+                  <font face="宋体">，孤寡老人或者孤儿每人每月在上述标准的基础上增加</font>
+                  <font face="Calibri">10%</font>
+                  <font face="宋体">。核定的各供养亲属的抚恤金之和不应高于因工死亡职工生前的工资。</font>
+                </span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+              <p>
+                <span>【依据：《工伤保险条例》第四十一条。】</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+            <td valign="center" style="width:4.5%;">
+              <p>
+                <span>工伤保险基金</span><span>
+                  <o:p></o:p>
+                </span>
+              </p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>`
+
+    window.ready = function (fn) {
+      document.addEventListener("DOMContentLoaded", function () {
+        document.removeEventListener("DOMContentLoaded", arguments.callee, false);
+        fn();
+      }, false);
+    }
+
+    window.ready(() => {
+      var preview = document.getElementById("preview")
+      var p = (preview.contentDocument || preview.contentWindow);
+      p = p.document || p;
+
+      p.body.innerHTML = content
+
+      removeTagsHoldContent("font", p)
+    })
+  </script>
+</body>
+
+</html>
