@@ -231,6 +231,22 @@ function removeStyleatt (el = document) {
   }
 }
 
+// 添加表格可编辑操作
+function addEditable(el = document) {
+  var tagElements = el.getElementsByTagName('table');
+  for (var m = tagElements.length - 1; m >= 0; m--) {
+    tagElements[m].setAttribute("contenteditable", "true");
+  }
+}
+
+// 移除表格可编辑标识
+function removeEditable(el = document) {
+  var tagElements = el.getElementsByTagName('table');
+  for (var m = tagElements.length - 1; m >= 0; m--) {
+    tagElements[m].removeAttribute("contenteditable");
+  }
+}
+
 class App extends Component {
 
   constructor(){
@@ -403,6 +419,63 @@ class App extends Component {
         }
 
         p.body.innerHTML = finalCode;
+        addEditable(p)
+
+        var tagElements = p.getElementsByTagName('table');
+        for (var m = tagElements.length - 1; m >= 0; m--) {
+          // tagElements[m].addEventListener("input", this.save, false);
+          var tTD; //用来存储当前更改宽度的Table Cell,避免快速移动鼠标的问题 
+          var table = tagElements[m];
+          for (let j = 0; j < table.rows[0].cells.length; j++) {
+            table.rows[0].cells[j].onmousedown = function (event) {
+              //记录单元格 
+              tTD = this;
+              if (event.offsetX > tTD.offsetWidth - 10) {
+                tTD.mouseDown = true;
+                tTD.oldX = event.x;
+                tTD.oldWidth = tTD.offsetWidth;
+              }
+              //记录Table宽度 
+              //table = tTD; while (table.tagName != ‘TABLE') table = table.parentElement; 
+              //tTD.tableWidth = table.offsetWidth; 
+            };
+            table.rows[0].cells[j].onmouseup = function () {
+              //结束宽度调整 
+              if (tTD === undefined) tTD = this;
+              tTD.mouseDown = false;
+              tTD.style.cursor = 'default';
+            };
+            table.rows[0].cells[j].onmousemove = function (event) {
+              //更改鼠标样式 
+              if (event.offsetX > this.offsetWidth - 10)
+                this.style.cursor = 'col-resize';
+              else
+                this.style.cursor = 'default';
+              //取出暂存的Table Cell 
+              if (tTD === undefined) tTD = this;
+              //调整宽度 
+              if (tTD.mouseDown !== null && tTD.mouseDown === true) {
+                tTD.style.cursor = 'default';
+                if (tTD.oldWidth + (event.x - tTD.oldX) > 0)
+                  tTD.width = tTD.oldWidth + (event.x - tTD.oldX);
+                //调整列宽 
+                tTD.style.width = tTD.width;
+                tTD.style.cursor = 'col-resize';
+                //调整该列中的每个Cell 
+                table = tTD;
+                while (table.tagName !== 'TABLE') table = table.parentElement;
+                for (j = 0; j < table.rows.length; j++) {
+                  if (table.rows[j].cells[tTD.cellIndex] && table.rows[j].cells[tTD.cellIndex].width) {
+                    table.rows[j].cells[tTD.cellIndex].width = tTD.width;
+                  }
+                }
+                //调整整个表 
+                //table.width = tTD.tableWidth + (tTD.offsetWidth – tTD.oldWidth); 
+                //table.style.width = table.width; 
+              }
+            };
+          }
+        }
 
         this.setState(() => ({html: finalCode}));
         this.textInput.style.backgroundColor="#7a9a95";
@@ -435,6 +508,19 @@ class App extends Component {
     this.setState({
       borderColorValue: color.hex
     });
+  }
+
+  save = () => {
+    var preview = document.getElementById("preview")
+    var p = (preview.contentDocument || preview.contentWindow);
+    p = p.document || p;
+
+    removeEditable(p)
+    this.setState(() => ({
+      html: p.body.innerHTML
+    }));
+
+    addEditable(p)
   }
 
   render() {
@@ -494,6 +580,7 @@ class App extends Component {
         </div>
         <input type="text" id="input" value={this.state.value} onFocus={this.inputFocus} onBlur={this.inputBlur} onPaste={this.inputPaste} ref={(input) => { this.textInput = input; }} readOnly/>
         <textarea id="output" onClick={this.textareaClick} ref={(input) => { this.textareaInput = input; }} value={this.state.html} readOnly></textarea>
+        <input type="button" className="button buttonRightBottom" value="保存" onClick={this.save}/>
         <iframe id="preview" title="preview"></iframe>
       </div>
     );
