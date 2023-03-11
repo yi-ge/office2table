@@ -2,8 +2,6 @@
 
 Office Table 转 HTML Table。
 
-在线体验：[https://table.yige.ink](https://table.yige.ink)
-
 ![预览图](preview.png)
 
 参考过一些开源项目的思路，时间太久，忘了。
